@@ -816,3 +816,7 @@ class LatentDiffusion(DDPM):
                     # print("Choose the following indexes:", best_index)
 
         return waveform
+    
+    @torch.no_grad()
+    def generate_sample_with_latent(self):
+        pass

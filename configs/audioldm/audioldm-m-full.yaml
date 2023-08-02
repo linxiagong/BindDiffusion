@@ -1,0 +1,95 @@
+id:
+  name: default
+  root: /mnt/fast/nobackup/users/hl01486/projects/general_audio_generation/AudioLDM-python/config/default/latent_diffusion.yaml
+  version: v1
+model:
+  device: cuda
+  params:
+    base_learning_rate: 5.0e-06
+    channels: 8
+    cond_stage_config:
+      params:
+        amodel: HTSAT-base
+        embed_mode: audio
+        key: waveform
+        sampling_rate: 16000
+        unconditional_prob: 0.1
+      target: audioldm.clap.encoders.CLAPAudioEmbeddingClassifierFreev2
+    cond_stage_key: waveform
+    cond_stage_trainable: true
+    conditioning_key: film
+    first_stage_config:
+      base_learning_rate: 4.5e-05
+      params:
+        ddconfig:
+          attn_resolutions: []
+          ch: 128
+          ch_mult:
+          - 1
+          - 2
+          - 4
+          double_z: true
+          downsample_time: false
+          dropout: 0.0
+          in_channels: 1
+          num_res_blocks: 2
+          out_ch: 1
+          resolution: 256
+          z_channels: 8
+        embed_dim: 8
+        image_key: fbank
+        monitor: val/rec_loss
+        subband: 1
+        time_shuffle: 1
+      target: audioldm.variational_autoencoder.autoencoder.AutoencoderKL
+    first_stage_key: fbank
+    latent_f_size: 16
+    latent_t_size: 256
+    linear_end: 0.0195
+    linear_start: 0.0015
+    log_every_t: 200
+    monitor: val/loss_simple_ema
+    num_timesteps_cond: 1
+    scale_by_std: true
+    timesteps: 1000
+    unet_config:
+      params:
+        attention_resolutions:
+        - 8
+        - 4
+        - 2
+        channel_mult:
+        - 1
+        - 2
+        - 3
+        - 5
+        extra_film_condition_dim: 512
+        extra_film_use_concat: true
+        image_size: 64
+        in_channels: 8
+        model_channels: 192
+        num_head_channels: 32
+        num_res_blocks: 2
+        out_channels: 8
+        use_spatial_transformer: true
+      target: audioldm.latent_diffusion.openaimodel.UNetModel
+  target: audioldm.pipline.LatentDiffusion
+preprocessing:
+  audio:
+    max_wav_value: 32768
+    sampling_rate: 16000
+  mel:
+    blur: false
+    freqm: 0
+    mean: -4.63
+    mel_fmax: 8000
+    mel_fmin: 0
+    n_mel_channels: 64
+    std: 2.74
+    target_length: 1024
+    timem: 0
+  stft:
+    filter_length: 1024
+    hop_length: 160
+    win_length: 1024
+wave_file_save_path: ./output
